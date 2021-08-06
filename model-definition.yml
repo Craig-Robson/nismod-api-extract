@@ -1,0 +1,32 @@
+# model-definition.yml
+
+kind: Model
+apiVersion: v1alpha4
+
+metadata:
+  displayName: NISMOD-Buildings
+  name: building-extractor
+  summary: Extracts MasterMap Buildings from NISMOD-DB API
+  description: >
+    Gets MasterMap buildings with additional attributes from NISMOD-DB API for any specified set of government office regions. Returns a GPKG.
+  type: data-processing
+
+spec:
+  inputs:
+    env:
+      - name: area_codes
+        title: Area Codes
+        desc: A comma seperated list of Government office region codes
+        type: string
+        default: E12000001,
+      - name: scale
+        title: Admin area scale
+        desc: The area scale to fetch data for - lads or gors
+        type: string
+        default: E08000021,
+    # no dataslots required
+  outputs:
+    datasets:
+      - name: outputs/buildings.gpkg
+        type: GPKG
+        desc: National Building set from NISMOD-DB++
