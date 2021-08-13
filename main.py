@@ -1,21 +1,47 @@
 import requests, json, zipfile, io
 import geopandas, pandas
 import glob, os
+from os import getenv
 
 
 def fetch_inputs():
     """"""
 
     # input variables
-    feature_layer = 'water-bodies' #'developed-land' #  # 'buildings' #
+    feature_layer = getenv('feature_layer') #developed-land' #'water-bodies' # #  # 'buildings' #
+    if feature_layer is None:
+        print('Warning! No feature layer defined. Setting as developed-land')
+        feature_layer = 'developed-land'
 
-    auth_username = os.getenv('username')
-    auth_password = os.getenv('password')
-    area_codes = 'E12000001,E12000002,E12000003,E12000004,E12000005,E12000006,E12000007,E12000008,E12000009' #'E08000021' #os.getenv('area_codes')
-    scale = 'gors' #'lads' #os.getenv('scale')
+    auth_username = getenv('username')
+    if auth_username is None:
+        print('Error! No api username passed. Exiting!')
+        exit(2)
+
+    auth_password = getenv('password')
+    if auth_password is None:
+        print('Error! No api password passed. Exiting!')
+        exit(2)
+
+    area_codes = getenv('area_codes') #'E12000001,E12000002,E12000003,E12000004,E12000005,E12000006,E12000007,E12000008,E12000009' #
+    if area_codes is None:
+        print('Warning! No area codes passed. Setting area code for Newcastle Upon Tyne (E08000021)')
+        area_codes = 'E08000021'
+
+    scale = getenv('scale')
+    if scale is None:
+        print('Warning! No scale definition passed. Setting as lads')
+        scale = 'lads'
 
     output_dir = 'data/outputs/'
     return feature_layer, auth_password, auth_username, area_codes, scale, output_dir
+
+
+def clear_download_directory():
+    """
+    Clear the download directory when finished processing
+    """
+    return
 
 
 def check_response(response):
@@ -109,8 +135,8 @@ def main():
             msoa.append(feat['properties']['msoa_code'])
 
 
-    area_scale = 'lad'#'msoa'
-    area_codes = lads # msoa
+    area_scale = 'msoa'
+    area_codes = msoa
 
     if feature_layer == 'buildings':
         rstring = 'mastermap/buildings?export_format=geojson-zip&scale=%s&building_year=2011' % (url, area_scale)
@@ -159,9 +185,10 @@ def main():
 
         # any processing required before saving the data file
         # select only polygons we want
-        gdf_result = gdf.loc[gdf['theme'] == 'Land,']
-        print(len(gdf_result.index))
-        gdf_result = gdf_result.loc[gdf_result['make'] == 'Multiple']
+        gdf_land = gdf.loc[gdf['theme'] == 'Land,']
+        print(len(gdf_land.index))
+        gdf_result = gdf_land.loc[gdf_land['make'] == 'Multiple']
+        #gdf_result.append(gdf_land.loc[gdf_land['make'] == 'Manmade'])
         print(len(gdf_result.index))
 
         # buildings
@@ -197,6 +224,6 @@ def main():
         #gdf.drop([''], axis=1)
 
         print('Saving output')
-        gdf.to_file(os.path.join(output_dir,'%s.gpkg' %feature_layer), driver="GPKG")
+        gdf_result.to_file(os.path.join(output_dir,'%s.gpkg' %feature_layer), driver="GPKG")
 
 main()
