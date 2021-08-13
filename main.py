@@ -180,7 +180,7 @@ def main():
         gdf = download_data(query=rstring, area_codes=area_codes, auth_username=auth_username, auth_password=auth_password)
 
         print(gdf.columns)
-        print(gdf.head)
+        #print(gdf.head)
         print(len(gdf.index))
 
         # any processing required before saving the data file
@@ -188,7 +188,7 @@ def main():
         gdf_land = gdf.loc[gdf['theme'] == 'Land,']
         print(len(gdf_land.index))
         gdf_result = gdf_land.loc[gdf_land['make'] == 'Multiple']
-        #gdf_result.append(gdf_land.loc[gdf_land['make'] == 'Manmade'])
+        gdf_land = gdf_land.loc[gdf_land['make'] == 'Manmade']
         print(len(gdf_result.index))
 
         # buildings
@@ -216,7 +216,7 @@ def main():
         print(len(gdf_roadside.index))
 
         # add all layers together
-        gdf_result.append(gdf_blds).append(gdf_rail).append(gdf_roads).append(gdf_roadside)
+        gdf_result = gdf_result.append(gdf_land).append(gdf_blds).append(gdf_rail).append(gdf_roads).append(gdf_roadside)
 
         # any other processing to data
         gdf_result = gdf_result.replace('NULL', '0')
