@@ -33,8 +33,13 @@ def fetch_inputs():
         print('Warning! No scale definition passed. Setting as lads')
         scale = 'lads'
 
+    output_name = getenv('output_name')
+    if output_name is None:
+        print('Warning! No output name passed. Output name will be the same will use the feature layer type.')
+        output_name = feature_layer
+
     output_dir = 'data/outputs/'
-    return feature_layer, auth_password, auth_username, area_codes, scale, output_dir
+    return feature_layer, auth_password, auth_username, area_codes, scale, output_dir, output_name
 
 
 def clear_download_directory():
@@ -94,7 +99,7 @@ def download_data(query, area_codes, auth_username, auth_password, url='https://
 
 def main():
 
-    feature_layer, auth_password, auth_username, area_codes, scale, output_dir = fetch_inputs()
+    feature_layer, auth_password, auth_username, area_codes, scale, output_dir, output_name = fetch_inputs()
 
 
     url = 'https://www.nismod.ac.uk/api/data'
