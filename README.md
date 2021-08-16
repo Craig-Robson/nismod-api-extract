@@ -18,3 +18,5 @@ To run with docker (after building). A number of options need to be passed to ex
 * area codes - the tool supports data selection using OAs, LADs or GORs
   * `--env area_codes=<text string of area codes>`
   * `--env scale=<the type of area codes passed (lads, gors or oas)>`
+* output_name - the name to be given to the output file generated. if not passed, name will use the feature layer
+  * `--env output_name=<the name for the output file>`
