@@ -231,4 +231,61 @@ def main():
         print('Saving output')
         gdf_result.to_file(os.path.join(output_dir,'%s.gpkg' %feature_layer), driver="GPKG")
 
+    elif feature_layer == 'developed-land-less':
+        # we get all the data, then filter it - this may need to change
+
+        classification_codes = 'all'
+        rstring = 'mastermap/areas?classification_codes=%s&export_format=geojson-zip&scale=%s&year=2011&flatten_lists=true' % (
+        classification_codes, area_scale)
+
+        # download data and build geodataframe
+        gdf = download_data(query=rstring, area_codes=area_codes, auth_username=auth_username, auth_password=auth_password)
+
+        print(gdf.columns)
+        #print(gdf.head)
+        print(len(gdf.index))
+
+        # any processing required before saving the data file
+        # select only polygons we want
+        #gdf_land = gdf.loc[gdf['theme'] == 'Land,']
+        #print(len(gdf_land.index))
+        #gdf_result = gdf_land.loc[gdf_land['make'] == 'Multiple']
+        #gdf_land = gdf_land.loc[gdf_land['make'] == 'Manmade']
+        #print(len(gdf_result.index))
+
+        # buildings
+        gdf_blds = gdf.loc[gdf['descriptive_group'] == 'Building,']
+        print(len(gdf_blds.index))
+        gdf_blds = gdf_blds.loc[gdf_blds['make'] == 'Manmade']
+        print(len(gdf_blds.index))
+
+        # rail
+        gdf_rail = gdf.loc[gdf['descriptive_group'] == 'Rail,']
+        print(len(gdf_rail.index))
+        gdf_rail = gdf_rail.loc[gdf_rail['make'] == 'Manmade']
+        print(len(gdf_rail.index))
+
+        # roads
+        #gdf_roads_ = gdf.loc[gdf['descriptive_group'] == 'Road Or Track,']
+        #print(len(gdf_roads_.index))
+        #gdf_roads = gdf_roads_.loc[gdf_roads_['make'] == 'Manmade']
+        #gdf_roads.append(gdf_roads_.loc[gdf_roads_['make'] == 'Unknown'])
+        #print(len(gdf_roads.index))
+
+        # roadside
+        #gdf_roadside = gdf.loc[gdf['descriptive_group'] == 'Roadside,']
+        #gdf_roadside = gdf_roadside.loc[gdf_roadside['make'] == 'Natural']
+        #print(len(gdf_roadside.index))
+
+        # add all layers together
+        gdf_result = gdf_result.append(gdf_land).append(gdf_blds).append(gdf_rail).append(gdf_roads).append(gdf_roadside)
+
+        # any other processing to data
+        gdf_result = gdf_result.replace('NULL', '0')
+        #gdf['res_count'] = gdf['res_count'].astype('int64')
+        #gdf.drop([''], axis=1)
+
+        print('Saving output')
+        gdf_result.to_file(os.path.join(output_dir,'%s.gpkg' %feature_layer), driver="GPKG")
+
 main()
