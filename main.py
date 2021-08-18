@@ -144,7 +144,7 @@ def main():
     area_codes = msoa
 
     if feature_layer == 'buildings':
-        rstring = 'mastermap/buildings?export_format=geojson-zip&scale=%s&building_year=2011' % (url, area_scale)
+        rstring = 'mastermap/buildings?export_format=geojson-zip&scale=%s&building_year=2011' % (area_scale)
 
         # download data and build dataframe
         gdf = download_data(query=rstring, area_codes=area_codes, auth_username=auth_username, auth_password=auth_password)
