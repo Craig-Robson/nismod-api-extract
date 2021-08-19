@@ -156,7 +156,7 @@ def main():
         gdf.drop(['toid_number','height_toroofbase','floor_area','building_ratio','number_of_floors'], axis=1)
 
         print('Saving output')
-        gdf.to_file(os.path.join(output_dir,'%s.gpkg' %feature_layer), driver="GPKG")
+        gdf.to_file(os.path.join(output_dir,'%s.gpkg' %output_name), driver="GPKG")
 
     elif feature_layer == 'water-bodies':
 
@@ -172,7 +172,7 @@ def main():
         #gdf.drop([''], axis=1)
 
         print('Saving output')
-        gdf.to_file(os.path.join(output_dir,'%s.gpkg' %feature_layer), driver="GPKG")
+        gdf.to_file(os.path.join(output_dir,'%s.gpkg' %output_name), driver="GPKG")
 
     elif feature_layer == 'developed-land':
         # we get all the data, then filter it - this may need to change
@@ -229,7 +229,7 @@ def main():
         #gdf.drop([''], axis=1)
 
         print('Saving output')
-        gdf_result.to_file(os.path.join(output_dir,'%s.gpkg' %feature_layer), driver="GPKG")
+        gdf_result.to_file(os.path.join(output_dir,'%s.gpkg' %output_name), driver="GPKG")
 
     elif feature_layer == 'developed-land-less':
         # we get all the data, then filter it - this may need to change
@@ -286,6 +286,6 @@ def main():
         #gdf.drop([''], axis=1)
 
         print('Saving output')
-        gdf_result.to_file(os.path.join(output_dir,'%s.gpkg' %feature_layer), driver="GPKG")
+        gdf_result.to_file(os.path.join(output_dir,'%s.gpkg' %output_name), driver="GPKG")
 
 main()
