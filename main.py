@@ -33,13 +33,20 @@ def fetch_inputs():
         print('Warning! No scale definition passed. Setting as lads')
         scale = 'lads'
 
+    # name for output
     output_name = getenv('output_name')
     if output_name is None:
         print('Warning! No output name passed. Output name will be the same will use the feature layer type.')
         output_name = feature_layer
 
+    # year to use when fetching data
+    data_year = getenv('data_year')
+    if data_year is None:
+        print('Warning! No data year passed. Using default of 2011.')
+        data_year = '2011'
+
     output_dir = 'data/outputs/'
-    return feature_layer, auth_password, auth_username, area_codes, scale, output_dir, output_name
+    return feature_layer, auth_password, auth_username, area_codes, scale, data_year, output_dir, output_name
 
 
 def clear_download_directory():
@@ -99,7 +106,7 @@ def download_data(query, area_codes, auth_username, auth_password, url='https://
 
 def main():
 
-    feature_layer, auth_password, auth_username, area_codes, scale, output_dir, output_name = fetch_inputs()
+    feature_layer, auth_password, auth_username, area_codes, scale, data_year, output_dir, output_name = fetch_inputs()
 
 
     url = 'https://www.nismod.ac.uk/api/data'
@@ -144,7 +151,7 @@ def main():
     area_codes = msoa
 
     if feature_layer == 'buildings':
-        rstring = 'mastermap/buildings?export_format=geojson-zip&scale=%s&building_year=2011' % (area_scale)
+        rstring = 'mastermap/buildings?export_format=geojson-zip&scale=%s&building_year=%s' % (area_scale, data_year)
 
         # download data and build dataframe
         gdf = download_data(query=rstring, area_codes=area_codes, auth_username=auth_username, auth_password=auth_password)
@@ -161,7 +168,7 @@ def main():
     elif feature_layer == 'water-bodies':
 
         classification_codes = '10089' #inland water, area
-        rstring = 'mastermap/areas?classification_codes=%s&export_format=geojson-zip&scale=%s&year=2011' % (classification_codes, area_scale)
+        rstring = 'mastermap/areas?classification_codes=%s&export_format=geojson-zip&scale=%s&year=%s' % (classification_codes, area_scale, data_year)
 
         # download data and build geodataframe
         gdf = download_data(query=rstring, area_codes=area_codes, auth_username=auth_username, auth_password=auth_password)
@@ -178,8 +185,8 @@ def main():
         # we get all the data, then filter it - this may need to change
 
         classification_codes = 'all'
-        rstring = 'mastermap/areas?classification_codes=%s&export_format=geojson-zip&scale=%s&year=2011&flatten_lists=true' % (
-        classification_codes, area_scale)
+        rstring = 'mastermap/areas?classification_codes=%s&export_format=geojson-zip&scale=%s&year=%s&flatten_lists=true' % (
+        classification_codes, area_scale, data_year)
 
         # download data and build geodataframe
         gdf = download_data(query=rstring, area_codes=area_codes, auth_username=auth_username, auth_password=auth_password)
@@ -235,8 +242,8 @@ def main():
         # we get all the data, then filter it - this may need to change
 
         classification_codes = 'all'
-        rstring = 'mastermap/areas?classification_codes=%s&export_format=geojson-zip&scale=%s&year=2011&flatten_lists=true' % (
-        classification_codes, area_scale)
+        rstring = 'mastermap/areas?classification_codes=%s&export_format=geojson-zip&scale=%s&year=%s&flatten_lists=true' % (
+        classification_codes, area_scale, data_year)
 
         # download data and build geodataframe
         gdf = download_data(query=rstring, area_codes=area_codes, auth_username=auth_username, auth_password=auth_password)

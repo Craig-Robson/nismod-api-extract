@@ -20,3 +20,5 @@ To run with docker (after building). A number of options need to be passed to ex
   * `--env scale=<the type of area codes passed (lads, gors or oas)>`
 * output_name - the name to be given to the output file generated. if not passed, name will use the feature layer
   * `--env output_name=<the name for the output file>`
+* data_year - the year of the data release to be used
+  * `--env data_year=<year>`
