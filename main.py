@@ -273,7 +273,7 @@ def main():
 
         # roadside
         gdf_roadside = gdf.loc[gdf['descriptive_group'] == 'Roadside,']
-        gdf_roadside = gdf_roadside.loc[gdf_roadside['make'] == 'Natural']
+        gdf_roadside = gdf_roadside.loc[gdf_roadside['make'] == 'Manmade']
         #print(len(gdf_roadside.index))
 
         # add all layers together
