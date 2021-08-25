@@ -235,6 +235,7 @@ def main():
 
     elif feature_layer == 'developed-land-less':
         # we get all the data, then filter it - this may need to change
+        # includes all layers as developed-land layer with the exception of roads being ignored
 
         classification_codes = 'all'
         rstring = 'mastermap/areas?classification_codes=%s&export_format=geojson-zip&scale=%s&year=%s&flatten_lists=true' % (
@@ -249,10 +250,10 @@ def main():
 
         # any processing required before saving the data file
         # select only polygons we want
-        #gdf_land = gdf.loc[gdf['theme'] == 'Land,']
+        gdf_land = gdf.loc[gdf['theme'] == 'Land,']
         #print(len(gdf_land.index))
-        #gdf_result = gdf_land.loc[gdf_land['make'] == 'Multiple']
-        #gdf_land = gdf_land.loc[gdf_land['make'] == 'Manmade']
+        gdf_result = gdf_land.loc[gdf_land['make'] == 'Multiple']
+        gdf_land = gdf_land.loc[gdf_land['make'] == 'Manmade']
         #print(len(gdf_result.index))
 
         # buildings
@@ -271,12 +272,12 @@ def main():
         #print(len(gdf_roads.index))
 
         # roadside
-        #gdf_roadside = gdf.loc[gdf['descriptive_group'] == 'Roadside,']
-        #gdf_roadside = gdf_roadside.loc[gdf_roadside['make'] == 'Natural']
+        gdf_roadside = gdf.loc[gdf['descriptive_group'] == 'Roadside,']
+        gdf_roadside = gdf_roadside.loc[gdf_roadside['make'] == 'Natural']
         #print(len(gdf_roadside.index))
 
         # add all layers together
-        gdf_result = gdf_result.append(gdf_land).append(gdf_blds).append(gdf_rail).append(gdf_roads).append(gdf_roadside)
+        gdf_result = gdf_result.append(gdf_land).append(gdf_blds).append(gdf_rail).append(gdf_roadside)
 
         # any other processing to data
         gdf_result = gdf_result.replace('NULL', '0')
